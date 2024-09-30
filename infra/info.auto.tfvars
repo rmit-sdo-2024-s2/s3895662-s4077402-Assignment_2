@@ -1,1 +1,1 @@
-public_key_path = "~/projects/s3895662-s4077402-assignment-2/misc/foo_ec2_key.pub"
+public_key_path = "foo_ec2_key.pub"
