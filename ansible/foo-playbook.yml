@@ -40,7 +40,7 @@
       dest: ~/snapshot-prod-data.sql
 
   - name: Run DB container
-    ansible.builtin.shell: docker run --name foo_db -e POSTGRES_PASSWORD=devops -e POSTGRES_USER=pete -e POSTGRES_DB=foo -p 0.0.0.0:5432:5432 -v ~/snapshot-prod-data.sql:/docker-entrypoint-initdb.d/init.sql -d postgres:14.7
+    shell: docker run --name foo_db -e POSTGRES_PASSWORD=devops -e POSTGRES_USER=pete -e POSTGRES_DB=foo -p 0.0.0.0:5432:5432 -v ~/snapshot-prod-data.sql:/docker-entrypoint-initdb.d/init.sql -d postgres:14.7
 
   - name: Run APP container
-    ansible.builtin.shell: docker run --name foo_app --add-host host.docker.internal:host-gateway -e PORT=3001 -e DB_HOSTNAME=host.docker.internal -e DB_PORT=5432 -e DB_USERNAME=pete -e DB_PASSWORD=devops -p 0.0.0.0:80:3001 -d mattcul/assignment2app:1.0.0
+    shell: docker run --name foo_app --add-host host.docker.internal:host-gateway -e PORT=3001 -e DB_HOSTNAME=host.docker.internal -e DB_PORT=5432 -e DB_USERNAME=pete -e DB_PASSWORD=devops -p 0.0.0.0:80:3001 -d mattcul/assignment2app:1.0.0
