@@ -3,6 +3,8 @@
   hosts: foo_server
   remote_user: ubuntu
   become: yes # sudo
+  vars:
+    ansible_ssh_extra_args: "-o StrictHostKeyChecking=accept-new" # automatically accept new ssh connections
 
   tasks:
   - name: Install required system packages for Docker
@@ -34,13 +36,45 @@
       state: latest
       update_cache: true
 
-  - name: Copy snapshot data to remote
+  - name: Ensure Docker is running
+    service:
+      name: docker
+      state: started
+      enabled: true
+
+  - name: Copy snapshot data to remote instance(s)
     copy:
       src: snapshot-prod-data.sql
       dest: ~/snapshot-prod-data.sql
 
   - name: Run DB container
-    shell: docker run --name foo_db -e POSTGRES_PASSWORD=devops -e POSTGRES_USER=pete -e POSTGRES_DB=foo -p 0.0.0.0:5432:5432 -v ~/snapshot-prod-data.sql:/docker-entrypoint-initdb.d/init.sql -d postgres:14.7
+    docker_container:
+      name: foo_db
+      image: postgres:14.7
+      state: started # ensure container is running
+      restart_policy: always # container restarts if it stops
+      published_ports:
+        - "5432:5432"
+      env:
+        POSTGRES_PASSWORD: devops
+        POSTGRES_USER: pete
+        POSTGRES_DB: foo
+      volumes:
+        - ~/snapshot-prod-data.sql:/docker-entrypoint-initdb.d/init.sql
 
   - name: Run APP container
-    shell: docker run --name foo_app --add-host host.docker.internal:host-gateway -e PORT=3001 -e DB_HOSTNAME=host.docker.internal -e DB_PORT=5432 -e DB_USERNAME=pete -e DB_PASSWORD=devops -p 0.0.0.0:80:3001 -d mattcul/assignment2app:1.0.0
+    docker_container:
+      name: foo_app
+      image: mattcul/assignment2app:1.0.0
+      state: started # ensure container is running
+      restart_policy: always # container restarts if it stops
+      published_ports:
+        - "80:3001"
+      env:
+        PORT: "3001"
+        DB_HOSTNAME: host.docker.internal
+        DB_PORT: "5432"
+        DB_USERNAME: pete
+        DB_PASSWORD: devops
+      etc_hosts:
+        host.docker.internal: "host-gateway"
