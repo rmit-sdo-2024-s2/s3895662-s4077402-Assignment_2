@@ -68,7 +68,3 @@ resource "aws_security_group" "foo_security_group" {
     cidr_blocks = ["0.0.0.0/0"]
   }
 }
-
-output "foo_server_public_hostname" {
-  value = aws_instance.foo-server.public_dns
-}
