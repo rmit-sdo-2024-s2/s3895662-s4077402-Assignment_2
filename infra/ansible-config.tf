@@ -1,3 +1,4 @@
+# builds the inventory
 resource "local_file" "ansible_inventory" {
     filename = "ansible-inventory.yml"
     content = <<-EOF
