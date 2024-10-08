@@ -44,14 +44,18 @@ resource "aws_instance" "foo-server" {
   }
 }
 
+data "external" "user_public_ip" {
+  program = ["bash", "-c", "echo '{\"ip\": \"'$(curl -s http://checkip.amazonaws.com)'\"}'"]
+}
+
 resource "aws_security_group" "foo_security_group" {
   name = "foo_security_group"
 
   ingress {
-    from_port   = 0
+    from_port   = 22
     to_port     = 22
     protocol    = "tcp"
-    cidr_blocks = ["0.0.0.0/0"]
+    cidr_blocks = ["${data.external.user_public_ip.result.ip}/32"]
   }
 
   ingress {
