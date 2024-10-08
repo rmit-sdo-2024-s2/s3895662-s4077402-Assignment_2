@@ -31,6 +31,9 @@ EOL
 # get the identity of the user who is logged in
 echo "Testing AWS credentials"
 aws sts get-caller-identity
+echo
+
+sleep 2
 
 cd infra
 
@@ -48,7 +51,8 @@ terraform validate
 echo "Running terraform apply, get ready to review and approve actions..."
 terraform apply --auto-approve
 
-echo "The oven is warming up the SSH port...Please wait approximately 30 seconds (sorry)"
+echo -e "\nThe oven is warming up the SSH port...Please wait approximately 30 seconds (sorry)\n"
+
 sleep 30
 
 foo_server_public_hostname=$(terraform output -raw foo_server_public_hostname)
