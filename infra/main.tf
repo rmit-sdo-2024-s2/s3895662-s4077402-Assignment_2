@@ -37,15 +37,15 @@ resource "aws_instance" "foo-server" {
   instance_type = "t2.micro"
 
   key_name        = aws_key_pair.admin.key_name
-  security_groups = [aws_security_group.vm.name]
+  security_groups = [aws_security_group.foo_security_group.name]
 
   tags = {
     Name = "foo-server"
   }
 }
 
-resource "aws_security_group" "vm" {
-  name = "vm"
+resource "aws_security_group" "foo_security_group" {
+  name = "foo_security_group"
 
   ingress {
     from_port   = 0
