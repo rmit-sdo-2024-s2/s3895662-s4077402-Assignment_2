@@ -1,5 +1,6 @@
+# builds the inventory
 resource "local_file" "ansible_inventory" {
-    filename = "${path.module}ansible-inventory.yml"
+    filename = "ansible-inventory.yml"
     content = <<-EOF
       foo_server:
         hosts:

@@ -11,6 +11,7 @@ provider "aws" {
   region = "us-east-1"
 }
 
+# configures Ubuntu machine image
 data "aws_ami" "ubuntu" {
   most_recent = true
 
@@ -27,33 +28,42 @@ data "aws_ami" "ubuntu" {
   owners = ["099720109477"]
 }
 
+# identifies key pair
 resource "aws_key_pair" "admin" {
   key_name   = "foo_ec2_key"
   public_key = file(var.public_key_path)
 }
 
+# creates AWS instance
 resource "aws_instance" "foo-server" {
   ami           = data.aws_ami.ubuntu.id
   instance_type = "t2.micro"
 
   key_name        = aws_key_pair.admin.key_name
-  security_groups = [aws_security_group.vm.name]
+  security_groups = [aws_security_group.foo_security_group.name]
 
   tags = {
     Name = "foo-server"
   }
 }
 
-resource "aws_security_group" "vm" {
-  name = "vm"
+# fetches the host's public ip
+data "external" "user_public_ip" {
+  program = ["bash", "-c", "echo '{\"ip\": \"'$(curl -s http://checkip.amazonaws.com)'\"}'"]
+}
 
+resource "aws_security_group" "foo_security_group" {
+  name = "foo_security_group"
+
+  # SSH inbound
   ingress {
-    from_port   = 0
+    from_port   = 22
     to_port     = 22
     protocol    = "tcp"
-    cidr_blocks = ["0.0.0.0/0"]
+    cidr_blocks = ["${data.external.user_public_ip.result.ip}/32"] # secures port 22 with the public ip of the host
   }
 
+  # HTTP inbound
   ingress {
     from_port   = 0
     to_port     = 80
@@ -61,14 +71,11 @@ resource "aws_security_group" "vm" {
     cidr_blocks = ["0.0.0.0/0"]
   }
 
+  # HTTPS outbound
   egress {
     from_port   = 0
     to_port     = 443
     protocol    = "tcp"
     cidr_blocks = ["0.0.0.0/0"]
   }
-}
-
-output "foo_server_public_hostname" {
-  value = aws_instance.foo-server.public_dns
 }
