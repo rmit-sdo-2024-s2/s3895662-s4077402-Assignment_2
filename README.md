@@ -79,11 +79,12 @@ graph TD
 
 1. Clone the repository.
     - `git clone git@github.com:rmit-sdo-2024-s2/s3895662-s4077402-assignment-2.git`
-2. Run the deployment script.
+2. If you are a student using AWS Learning Academy, ensure that you have started the AWS Lab Environment.
+3. Run the deployment script.
     - `./single-instance-deploy.sh`
-3. Follow the prompts to enter your AWS credentials.
-4. Wait for the script to complete.
-5. Access the Foo App by navigating to the public IP address of the EC2 instance in your web browser.
+4. Follow the prompts to enter your AWS credentials.
+5. Wait for the script to complete.
+6. Access the Foo App by navigating to the public IP address of the EC2 instance in your web browser.
 
 
 <!-- #### Description of the GitHub Actions workflow -->
