@@ -19,65 +19,27 @@ The script will prompt the user for their AWS credentials, generate an SSH key p
 
 #### Description of the architecture
 
-1. Get and store AWS credentials
-```bash
-# input aws credentials
-read -p "Enter AWS Access Key ID: " AWS_ACCESS_KEY_ID
-read -p "Enter AWS Secret Access Key: " AWS_SECRET_ACCESS_KEY
-read -p "Enter AWS Session Token: " AWS_SESSION_TOKEN
-read -p "Enter Default Region (default is 'us-east-1'): " AWS_DEFAULT_REGION
-
-# us-east-1 is the default if the user doesn't enter a region
-if [ -z "$AWS_DEFAULT_REGION" ]; then
-    AWS_DEFAULT_REGION="us-east-1"
-fi
-
-# populate the credentials file
-cat <<EOL > ~/.aws/credentials
-[default]
-aws_access_key_id=$AWS_ACCESS_KEY_ID
-aws_secret_access_key=$AWS_SECRET_ACCESS_KEY
-aws_session_token=$AWS_SESSION_TOKEN
-EOL
-
-# populate the config file
-cat <<EOL > ~/.aws/config
-[default]
-region=$AWS_DEFAULT_REGION
-EOL
-```
-    
+1. Shell Script
+    - A bash script that automates the necessary steps to deploy the Foo App on AWS.
+ 
 2. Provision infrastructure using Terraform
+    - Description of the infrastructure
+        - EC2 instance
+        - Security group
 
 3. Configure infrastructure using Ansible
+    - Description of the configuration
+        - Install Docker
+        - Pull Foo App image
+        - Deploy application and database containers
 
 
 4. Deploy application and database containers
+    - Description of the containers
+        - Foo App
+        - MySQL database
 
-
-#### Key data flows
-
-
-
-### Deployment process
-
-#### Prerequisites
-
-1. You will need to have an AWS account. You can create one [here](https://aws.amazon.com/).
-2. You will need the following tools installed on your local machine:
-    - [Terraform](https://www.terraform.io/)
-    - [Ansible](https://www.ansible.com/)
-    - [AWS CLI](https://aws.amazon.com/cli/)
-    - [OpenSSH](https://www.openssh.com/)
-
-    
-
-#### Description of the GitHub Actions workflow
-
-
-
-#### Backup process: deploying from a shell script
-
+#### Process Diagram
 ```mermaid 
 graph TD
     A[Developer at Alpine Inc] --> B[Run Deployment Script]
@@ -90,6 +52,46 @@ graph TD
     H --> I[Deploy Application and Database Containers]
 
 ```
+
+##### Description of the process diagram
+1. The developer runs the deployment script.
+2. The script prompts the developer for their AWS credentials.
+3. The script generates an SSH key pair.
+4. The script uses Terraform to provision the infrastructure.
+5. Terraform provisions an EC2 instance and a security group.
+6. The script uses Ansible to configure the infrastructure.
+7. Ansible installs Docker and pulls the Foo App image.
+8. Ansible deploys the application and database containers.
+
+
+### Deployment process
+
+#### Prerequisites
+
+1. You will need to have an AWS account. You can create one [here](https://aws.amazon.com/).
+2. You will need the following tools installed on your local machine:
+    - [Terraform](https://www.terraform.io/)
+    - [Ansible](https://www.ansible.com/)
+    - [AWS CLI](https://aws.amazon.com/cli/)
+
+    
+#### Steps to deploy the Foo App
+
+1. Clone the repository.
+    - `git clone git@github.com:rmit-sdo-2024-s2/s3895662-s4077402-assignment-2.git`
+2. Run the deployment script.
+    - `./single-instance-deploy.sh`
+3. Follow the prompts to enter your AWS credentials.
+4. Wait for the script to complete.
+5. Access the Foo App by navigating to the public IP address of the EC2 instance in your web browser.
+
+
+<!-- #### Description of the GitHub Actions workflow -->
+
+
+
+<!-- #### Backup process: deploying from a shell script -->
+
 
 
 #### Validating that the app is working
