@@ -94,4 +94,11 @@ graph TD
 
 ## Contents of this repo
 
+- `README.md`: This file.
+- `single-instance-deploy.sh`: A shell script that automates the deployment process.
+- `infra/`: A directory containing the Terraform configuration files and SSH key pair.
+- `ansible/`: A directory containing the Ansible playbook and MySQL dump file.
+- `app/`: A directory containing the Dockerfile and application files for the Foo App.
+- `misc/`: A directory containing files given by Alpine Inc. for the deployment proces, as well as the architecture diagram.
+
 
