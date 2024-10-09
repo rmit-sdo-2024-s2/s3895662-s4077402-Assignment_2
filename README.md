@@ -5,7 +5,12 @@
 - Student ID/IDs: s3895662 and s4077402
 ## Solution design
 
-<!-- what to put here?  -->
+### Overview
+The solution is designed to deploy a web application called Foo App. The application consists of two Docker containers: a web application and a database. The web application is a web page that displays a list of items from a MySQL database.
+
+The solution is deployed on AWS using Terraform and Ansible amd is spun up using a single script (./single-instance-deploy.sh) that automates the deployment process. 
+
+The script will prompt the user for their AWS credentials, generate an SSH key pair, provision the infrastructure using Terraform, configure the infrastructure using Ansible, and deploy the application and database containers.
 
 ### Infrastructure
 
