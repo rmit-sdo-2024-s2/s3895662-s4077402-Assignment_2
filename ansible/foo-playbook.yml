@@ -81,6 +81,7 @@
         POSTGRES_DB: foo
       volumes:
         - ~/snapshot-prod-data.sql:/docker-entrypoint-initdb.d/init.sql
+      container_default_behavior: compatibility
 
   - name: Run APP container
     docker_container:
@@ -98,3 +99,4 @@
         DB_PASSWORD: devops
       etc_hosts:
         host.docker.internal: "host-gateway"
+      container_default_behavior: compatibility
