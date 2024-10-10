@@ -8,6 +8,19 @@
     ansible_python_interpreter: /usr/bin/python3 # use python3
 
   tasks:
+  # ensure apt is updated
+  - name: Update apt
+    apt:
+      update_cache: yes
+      cache_valid_time: 3600
+
+  # ensure python3 is installed
+  - name: Install python3
+    apt:
+      name: python3
+      state: latest
+      update_cache: true
+
   - name: Install required system packages for Docker
     apt:
       pkg:
@@ -20,6 +33,12 @@
         - python3-setuptools
       state: latest
       update_cache: true
+
+    # ensure python docker module is installed
+  - name: Install Docker python module
+    pip:
+      name: docker
+      state: latest
 
   - name: Add Docker GPG apt Key
     apt_key:
