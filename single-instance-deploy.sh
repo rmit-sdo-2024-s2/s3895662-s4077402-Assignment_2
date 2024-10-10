@@ -10,7 +10,7 @@ echo -e "\nEnter AWS Secret Access Key (leave blank for existing creds):"
 read AWS_SECRET_ACCESS_KEY
 echo -e "\nEnter AWS Session Token (leave blank for existing creds):"
 read AWS_SESSION_TOKEN
-echo -e "\nEnter Default Region (leave blank for existing creds):"
+echo -e "\nEnter Default Region (leave blank for existing creds):" # e.g. us-east-1
 read AWS_DEFAULT_REGION
 
 # load existing credentials if available
@@ -72,7 +72,7 @@ echo "Initialising Terraform..."
 terraform init
 echo "Validating Terraform configuration..."
 terraform validate
-echo "Running terraform apply, get ready to review and approve actions..."
+echo "Applying Terraform configuration..."
 terraform apply --auto-approve
 
 echo -e "\nThe oven is warming up the SSH port...Please wait approximately 30 seconds (sorry)\n"
