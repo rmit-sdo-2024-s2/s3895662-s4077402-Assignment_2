@@ -97,6 +97,7 @@ graph TD
 
 #### Validating that the app is working
 <!-- GIF from terminal to opening the EC2 instance by the hostname and then clicking the to the Foos Apps -->
+<img src="./misc/COSC2759 A2 Application.gif" >
 
 
 
