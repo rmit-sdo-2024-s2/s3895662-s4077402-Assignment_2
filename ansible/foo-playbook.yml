@@ -5,6 +5,7 @@
   become: yes # sudo
   vars:
     ansible_ssh_extra_args: "-o StrictHostKeyChecking=accept-new" # automatically accept new ssh connections
+    ansible_python_interpreter: /usr/bin/python3 # use python3
 
   tasks:
   - name: Install required system packages for Docker
