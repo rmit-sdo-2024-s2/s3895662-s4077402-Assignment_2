@@ -4,14 +4,38 @@
 # SINGLE INSTANCE
 
 # input aws credentials
-read -p "Enter AWS Access Key ID: " AWS_ACCESS_KEY_ID
-read -p "Enter AWS Secret Access Key: " AWS_SECRET_ACCESS_KEY
-read -p "Enter AWS Session Token: " AWS_SESSION_TOKEN
-read -p "Enter Default Region (default is 'us-east-1'): " AWS_DEFAULT_REGION
+echo -e "\nEnter AWS Access Key ID (leave blank for existing creds):"
+read AWS_ACCESS_KEY_ID 
+echo -e "\nEnter AWS Secret Access Key (leave blank for existing creds):"
+read AWS_SECRET_ACCESS_KEY
+echo -e "\nEnter AWS Session Token (leave blank for existing creds):"
+read AWS_SESSION_TOKEN
+echo -e "\nEnter Default Region (leave blank for existing creds):" # e.g. us-east-1
+read AWS_DEFAULT_REGION
 
-# us-east-1 is the default if the user doesn't enter a region
+# load existing credentials if available
+if [ -f ~/.aws/credentials ]; then
+    EXISTING_ACCESS_KEY_ID=$(grep -oP '(?<=aws_access_key_id=).*' ~/.aws/credentials)
+    EXISTING_SECRET_ACCESS_KEY=$(grep -oP '(?<=aws_secret_access_key=).*' ~/.aws/credentials)
+    EXISTING_SESSION_TOKEN=$(grep -oP '(?<=aws_session_token=).*' ~/.aws/credentials)
+    EXISTING_DEFAULT_REGION=$(grep -oP '(?<=region=).*' ~/.aws/config)
+fi
+
+# if inputs are blank then use existing credentials
+if [ -z "$AWS_ACCESS_KEY_ID" ]; then
+    AWS_ACCESS_KEY_ID=$EXISTING_ACCESS_KEY_ID
+fi
+
+if [ -z "$AWS_SECRET_ACCESS_KEY" ]; then
+    AWS_SECRET_ACCESS_KEY=$EXISTING_SECRET_ACCESS_KEY
+fi
+
+if [ -z "$AWS_SESSION_TOKEN" ]; then
+    AWS_SESSION_TOKEN=$EXISTING_SESSION_TOKEN
+fi
+
 if [ -z "$AWS_DEFAULT_REGION" ]; then
-    AWS_DEFAULT_REGION="us-east-1"
+    AWS_DEFAULT_REGION=$EXISTING_DEFAULT_REGION
 fi
 
 # populate the credentials file
@@ -48,7 +72,7 @@ echo "Initialising Terraform..."
 terraform init
 echo "Validating Terraform configuration..."
 terraform validate
-echo "Running terraform apply, get ready to review and approve actions..."
+echo "Applying Terraform configuration..."
 terraform apply --auto-approve
 
 echo -e "\nThe oven is warming up the SSH port...Please wait approximately 30 seconds (sorry)\n"
