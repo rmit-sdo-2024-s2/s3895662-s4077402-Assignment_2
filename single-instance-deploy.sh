@@ -3,6 +3,10 @@
 # Deploy Foo app - see README.md
 # SINGLE INSTANCE
 
+set -e # exit on any error
+
+trap 'echo "An error occured. Exiting..."' ERR # display error message when error occurs
+
 # input aws credentials
 echo -e "\nEnter AWS Access Key ID (leave blank for existing creds):"
 read AWS_ACCESS_KEY_ID 
