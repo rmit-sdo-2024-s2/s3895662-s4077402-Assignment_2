@@ -135,38 +135,6 @@ single-instance-deploy.sh - Environment variables are collected and stored in th
 
 </br>
 
-### Deployment process
-
-#### Prerequisites
-
-1. You will need to have an AWS account. You can create one [here](https://aws.amazon.com/).
-2. You will need the following tools installed on your local machine:
-    - [Terraform](https://www.terraform.io/)
-    - [Ansible](https://www.ansible.com/)
-    - [AWS CLI](https://aws.amazon.com/cli/)
-    - [Git](https://git-scm.com/)
-
-
-    
-#### Steps to deploy the Foo App
-
-1. Clone the repository.
-    - `git clone git@github.com:rmit-sdo-2024-s2/s3895662-s4077402-assignment-2.git`
-2. If you are a student using AWS Learning Academy, ensure that you have started the AWS Lab Environment.
-3. Run the deployment script.
-    - `./single-instance-deploy.sh`
-4. Follow the prompts to enter your AWS credentials.
-5. Wait for the script to complete.
-6. Access the Foo App by navigating to the public IP address of the EC2 instance in your web browser.
-
-
-<!-- #### Description of the GitHub Actions workflow -->
-
-
-
-<!-- #### Backup process: deploying from a shell script -->
-
-
 ### Branch Protection
 
 <p> The main branch is protected by the following rules: </p>
@@ -183,7 +151,34 @@ single-instance-deploy.sh - Environment variables are collected and stored in th
 <br>
 <img src ="./misc/main-branch-protection-4.webp">
 
-#### Validating that the app is working
+### Deployment process
+
+#### Prerequisites
+
+1. You will need to have an AWS account. You can create one [here](https://aws.amazon.com/).
+2. You will need the following tools installed on your local machine:
+    - [Terraform](https://www.terraform.io/)
+    - [Ansible](https://www.ansible.com/)
+    - [AWS CLI](https://aws.amazon.com/cli/)
+    - [Git](https://git-scm.com/)
+
+#### Steps to deploy the Foo App
+
+1. Clone the repository.
+    - `git clone git@github.com:rmit-sdo-2024-s2/s3895662-s4077402-assignment-2.git`
+2. If you are a student using AWS Learning Academy, ensure that you have started the AWS Lab Environment.
+3. Run the deployment script.
+    - `./single-instance-deploy.sh`
+4. Follow the prompts to enter your AWS credentials.
+5. Wait for the script to complete.
+6. Access the Foo App by navigating to the public IP address of the EC2 instance in your web browser.
+
+<!-- #### Description of the GitHub Actions workflow -->
+
+<!-- #### Backup process: deploying from a shell script -->
+
+
+### Validating that the app is working
 <!-- GIF from terminal to opening the EC2 instance by the hostname and then clicking the to the Foos Apps -->
 <img src="./misc/COSC2759 A2 Application.gif" >
 
@@ -219,7 +214,3 @@ single-instance-deploy.sh - Environment variables are collected and stored in th
     - `main-branch-protection-4.webp`
     - `how-to-deploy.txt`
     - `how-to-build-app-docker-image.txt`
-
-
-
-
