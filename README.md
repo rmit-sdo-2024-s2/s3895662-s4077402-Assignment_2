@@ -43,10 +43,10 @@ The script will prompt the user for their AWS credentials, generate an SSH key p
         - The Foo App container is deployed on port 3001
         - The MySQL database container is deployed on port 5432
 
-#### Process Diagram
-```mermaid 
+### Process Diagram
+```mermaid
 graph TD
-    A[Developer at Alpine Inc] --> B[Run Deployment Script]
+    A((Developer at Alpine Inc)) --> B[Run Deployment Script]
     B --> C[Get AWS Credentials]
     C --> D[Generate SSH Key]
     D --> E[Run Terraform to Provision Infrastructure]
@@ -54,19 +54,86 @@ graph TD
     F --> G[Run Ansible Playbook for Configuration]
     G --> H[Install Docker and Pull Foo App Image]
     H --> I[Deploy Application and Database Containers]
+    I --> J[Access Foo App on Web Browser]
+```
+### Design Decisions
 
+```yaml
+vars:
+    ansible_ssh_extra_args: "-o StrictHostKeyChecking=accept-new"
 ```
 
-##### Description of the process diagram
-1. The developer runs the deployment script.
-2. The script prompts the developer for their AWS credentials.
-3. The script generates an SSH key pair.
-4. The script uses Terraform to provision the infrastructure.
-5. Terraform provisions an EC2 instance and a security group.
-6. The script uses Ansible to configure the infrastructure.
-7. Ansible installs Docker and pulls the Foo App image.
-8. Ansible deploys the application and database containers.
+foo-playbook.yml - This variable accepts all new incoming ssh connections without needing to manually do it to improve automation.
 
+</br>
+
+```yaml
+state: started
+restart_policy: always
+```
+
+foo-playbook.yml - These parameters make sure that the containers are running and if they go down then they'll restart.
+
+</br>
+
+```hcl
+resource"local_file" "ansible_inventory" {
+    filename = "ansible-inventory.yml"
+    content = <<-EOF
+      foo_server:
+        hosts:
+          foo:
+            ansible_host: ${aws_instance.foo-server.public_dns}
+    EOF
+}
+```
+
+ansible-config.tf - The inventory of hosts for ansible is automatically created with a Terraform config.
+
+</br>
+
+```hcl
+data"external" "user_public_ip" {
+  program = ["bash", "-c", "echo '{\"ip\": \"'$(curl -s http://checkip.amazonaws.com)'\"}'"]
+}
+```
+```hcl
+cidr_blocks = ["${data.external.user_public_ip.result.ip}/32"]
+```
+
+main.tf - This is the technique used to fetch the public ip of the user executing the infrastructure build in order to protect the SSH port.
+
+</br>
+
+```bash
+set -e
+
+trap 'echo "An error occured. Exiting..."' ERR
+```
+
+single-instance-deploy.sh - A check is implemented where if any error occurs then the script will stop at the point of error and display an error message to the user.
+
+</br>
+
+```bash
+echo -e "\nEnter AWS Access Key ID (leave blank for existing creds):"
+read AWS_ACCESS_KEY_ID 
+```
+```bash
+if [ -f ~/.aws/credentials ]; then
+    EXISTING_ACCESS_KEY_ID=$(grep -oP '(?<=aws_access_key_id=).*' ~/.aws/credentials)
+fi
+```
+```bash
+cat <<EOL > ~/.aws/credentials
+[default]
+aws_access_key_id=$AWS_ACCESS_KEY_ID
+EOL
+```
+
+single-instance-deploy.sh - Environment variables are collected and stored in the appropriate cred files. If the user doesn't enter anything then existing creds in the files are used (for illustrative purposes only the AWS_ACCESS_KEY_ID variable is displayed).
+
+</br>
 
 ### Deployment process
 
