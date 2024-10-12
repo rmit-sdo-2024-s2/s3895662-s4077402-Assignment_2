@@ -1,0 +1,92 @@
+---
+- name: Configure db servers
+  hosts: db_servers
+  remote_user: ubuntu
+  become: yes # sudo
+  vars:
+    ansible_ssh_extra_args: "-o StrictHostKeyChecking=accept-new" # automatically accept new ssh connections
+    ansible_python_interpreter: /usr/bin/python3 # use python3
+
+
+  tasks:
+  # ensure apt is updated
+  - name: Update apt
+    apt:
+      update_cache: yes
+      cache_valid_time: 3600
+
+  # ensure python3 is installed
+  - name: Install python3
+    apt:
+      name: python3
+      state: latest
+      update_cache: true
+
+  # ensure pip3 is installed
+  - name: Install pip3
+    apt:
+      name: python3-pip
+      state: latest
+      update_cache: true
+
+  - name: Install required system packages for Docker
+    apt:
+      pkg:
+        - apt-transport-https
+        - ca-certificates
+        - curl
+        - software-properties-common
+        - python3-pip
+        - virtualenv
+        - python3-setuptools
+      state: latest
+      update_cache: true
+
+  # ensure python docker module is installed
+  - name: Install Docker python module
+    pip:
+      name: docker
+      state: latest
+
+  - name: Add Docker GPG apt Key
+    apt_key:
+      url: https://download.docker.com/linux/ubuntu/gpg
+      state: present
+
+  - name: Add Docker Repository
+    apt_repository:
+      repo: deb https://download.docker.com/linux/ubuntu jammy stable
+      state: present
+
+  - name: Update apt and install docker-ce
+    apt:
+      name: docker-ce
+      state: latest
+      update_cache: true
+
+  - name: Ensure Docker is running
+    service:
+      name: docker
+      state: started
+      enabled: true
+
+  - name: Copy snapshot data to remote
+    copy:
+      src: snapshot-prod-data.sql
+      dest: ~/snapshot-prod-data.sql
+
+  - name: Run DB container
+    docker_container:
+      name: foo_db
+      image: postgres:14.7
+      state: started # ensure container is running
+      restart_policy: always # container restarts if it stops
+      published_ports:
+        - "5432:5432"
+      env:
+        POSTGRES_PASSWORD: devops
+        POSTGRES_USER: pete
+        POSTGRES_DB: foo
+      volumes: 
+        - ~/snapshot-prod-data.sql:/docker-entrypoint-initdb.d/init.sql
+      container_default_behavior: compatibility
