@@ -135,6 +135,22 @@ single-instance-deploy.sh - Environment variables are collected and stored in th
 
 </br>
 
+### Branch Protection
+
+<p> The main branch is protected by the following rules: </p>
+<img src="./misc/main-branch-protection.webp">
+<br>
+1. Require pull request reviews before merging
+<br>
+<img src ="./misc/main-branch-protection-2.webp">
+<br>
+2. Restrict Deletions to the main branch
+<img src ="./misc/main-branch-protection-3.webp">
+<br>
+3. Block force push to the main branch
+<br>
+<img src ="./misc/main-branch-protection-4.webp">
+
 ### Deployment process
 
 #### Prerequisites
@@ -146,8 +162,6 @@ single-instance-deploy.sh - Environment variables are collected and stored in th
     - [AWS CLI](https://aws.amazon.com/cli/)
     - [Git](https://git-scm.com/)
 
-
-    
 #### Steps to deploy the Foo App
 
 1. Clone the repository.
@@ -159,28 +173,44 @@ single-instance-deploy.sh - Environment variables are collected and stored in th
 5. Wait for the script to complete.
 6. Access the Foo App by navigating to the public IP address of the EC2 instance in your web browser.
 
-
 <!-- #### Description of the GitHub Actions workflow -->
-
-
 
 <!-- #### Backup process: deploying from a shell script -->
 
 
-
-#### Validating that the app is working
+### Validating that the app is working
 <!-- GIF from terminal to opening the EC2 instance by the hostname and then clicking the to the Foos Apps -->
 <img src="./misc/COSC2759 A2 Application.gif" >
-
-
 
 ## Contents of this repo
 
 - `README.md`: This file.
+- `.gitignore`: A file that specifies which files and directories to ignore in the repository.
 - `single-instance-deploy.sh`: A shell script that automates the deployment process.
 - `infra/`: A directory containing the Terraform configuration files and SSH key pair.
+    - `main.tf`
+    - `output.tf`
+    - `ansible-config.tf`
+    - `vars.tf`
+    - `info.auto.tfvars`
 - `ansible/`: A directory containing the Ansible playbook and MySQL dump file.
+    - `foo-playbook.yml`
+    - `snapshot-prod-data.sql`
 - `app/`: A directory containing the Dockerfile and application files for the Foo App.
+    - `Dockerfile`
+    - `index.js`
+    - `package.json`
+    - `.gitignore`
+    - `view/`
+        - `pages/`
+            - `index.ejs`
+            - `foos.ejs`
 - `misc/`: A directory containing files given by Alpine Inc. for the deployment proces, as well as the architecture diagram.
-
-
+    - `COSC759 A2 Architecture Diagram.png`
+    - `COSC2759 A2 Application.gif`
+    - `main-branch-protection.webp`
+    - `main-branch-protection-2.webp`
+    - `main-branch-protection-3.webp`
+    - `main-branch-protection-4.webp`
+    - `how-to-deploy.txt`
+    - `how-to-build-app-docker-image.txt`
