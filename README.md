@@ -167,6 +167,21 @@ single-instance-deploy.sh - Environment variables are collected and stored in th
 <!-- #### Backup process: deploying from a shell script -->
 
 
+### Branch Protection
+
+<p> The main branch is protected by the following rules: </p>
+<img src="./misc/main-branch-protection.webp">
+<br>
+1. Require pull request reviews before merging
+<br>
+<img src ="./misc/main-branch-protection-2.webp">
+<br>
+2. Restrict Deletions to the main branch
+<img src ="./misc/main-branch-protection-3.webp">
+<br>
+3. Block force push to the main branch
+<br>
+<img src ="./misc/main-branch-protection-4.webp">
 
 #### Validating that the app is working
 <!-- GIF from terminal to opening the EC2 instance by the hostname and then clicking the to the Foos Apps -->
