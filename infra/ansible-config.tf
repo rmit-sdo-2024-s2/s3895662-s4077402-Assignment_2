@@ -1,10 +1,14 @@
-# builds the inventory
 resource "local_file" "ansible_inventory" {
     filename = "ansible-inventory.yml"
     content = <<-EOF
-      foo_server:
+      app_servers:
         hosts:
-          foo:
-            ansible_host: ${aws_instance.foo-server.public_dns}
+          app1:
+            ansible_host: ${aws_instance.app_server_1.public_dns}
+          app2:
+            ansible_host: ${aws_instance.app_server_2.public_dns}
+      db_servers:
+        hosts:
+          ${aws_instance.db_server.public_dns}:
     EOF
 }
