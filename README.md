@@ -15,7 +15,7 @@ The script will prompt the user for their AWS credentials, generate an SSH key p
 ### Infrastructure
 
 #### Architecture diagram
-![Architecture Diagram](placeholder.png)
+<img src="./misc/COSC759 A2 Architecture Diagram.png">
 
 #### Description of the architecture
 
@@ -26,18 +26,22 @@ The script will prompt the user for their AWS credentials, generate an SSH key p
     - Description of the infrastructure
         - EC2 instance
         - Security group
+            - SSH port open to the developer's public IP
+            - HTTP port open to the public
 
 3. Configure infrastructure using Ansible
     - Description of the configuration
         - Install Docker
-        - Pull Foo App image
-        - Deploy application and database containers
-
+        - Pull Foo App and Foo DB images from Docker Hub
+        - Deploy application and database containers on the EC2 instance
 
 4. Deploy application and database containers
     - Description of the containers
         - Foo App
         - MySQL database
+    - Description of the deployment
+        - The Foo App container is deployed on port 3001
+        - The MySQL database container is deployed on port 5432
 
 #### Process Diagram
 ```mermaid 
