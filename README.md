@@ -144,6 +144,8 @@ single-instance-deploy.sh - Environment variables are collected and stored in th
     - [Terraform](https://www.terraform.io/)
     - [Ansible](https://www.ansible.com/)
     - [AWS CLI](https://aws.amazon.com/cli/)
+    - [Git](https://git-scm.com/)
+
 
     
 #### Steps to deploy the Foo App
