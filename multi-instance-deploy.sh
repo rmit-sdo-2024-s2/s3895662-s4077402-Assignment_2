@@ -69,7 +69,17 @@ rm -f "${path_to_ssh_key}"
 # generate ssh key
 ssh-keygen -t ed25519 -f "${path_to_ssh_key}" -N ""
 
-cd infra
+cd bucket
+
+# create the S3 bucket infrastructure
+echo "Initialising Terraform..."
+terraform init
+echo "Validating Terraform configuration..."
+terraform validate
+echo "Applying Terraform configuration..."
+terraform apply --auto-approve
+
+cd ../infra
 
 # create the EC2 infrastructure (load balancer requires some patience to be made)
 echo "Initialising Terraform..."
