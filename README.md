@@ -324,7 +324,7 @@ load-balancer.tf - Logs from the load balancer are sent to the s3 bucket in orde
     - `s3-bucket-infra.tf`
 - `misc/`: A directory containing files given by Alpine Inc. for the deployment proces, as well as the architecture diagram.
     - `COSC2759 A2 Architecture Diagram (single instance).png`
-
+    - `COSC2759 A2 Architecture Diagram (multi instance).png`
     - `COSC2759 A2 Application.gif`
     - `main-branch-protection.webp`
     - `main-branch-protection-2.webp`
