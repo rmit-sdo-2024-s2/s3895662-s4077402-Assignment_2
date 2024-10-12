@@ -99,6 +99,13 @@ resource "aws_lb" "foo_alb" {
   security_groups    = [aws_security_group.alb_security_group.id]
   subnets            = [aws_default_subnet.default_az1.id, aws_default_subnet.default_az2.id, aws_default_subnet.default_az3.id, aws_default_subnet.default_az4.id, aws_default_subnet.default_az5.id, aws_default_subnet.default_az6.id]
 
+# sends logs to the s3 bucket
+access_logs {
+    enabled  = true
+    bucket  = "foo-bucket-s3895662-s4077402"
+    prefix  = "alb"
+  }
+
   tags = {
     Name = "Foo_ALB"
   }
