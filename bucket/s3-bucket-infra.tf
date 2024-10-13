@@ -2,7 +2,7 @@ data "aws_caller_identity" "current" {}
 
 # create s3 bucket
 resource "aws_s3_bucket" "s3_bucket" {
-  bucket = "foo-bucket-s3895662-s4077402" # change the name if it says "still creating..." forever and make sure to change main.tf backend too
+  bucket = "foo-bucket-s3895662-s4077402" # change the name if it says "still creating..." forever and make sure to change all instances of that name
   force_destroy = true
 }
 
