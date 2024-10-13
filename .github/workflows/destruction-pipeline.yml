@@ -1,0 +1,46 @@
+name: Foo Application CD Pipeline
+
+on:
+  workflow_dispatch:
+
+jobs:
+  destroy:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout repo
+        uses: actions/checkout@v4
+      
+      - name: Configure AWS Credentials
+        uses: aws-actions/configure-aws-credentials@v1
+        with:
+          aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
+          aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+          aws-session-token: ${{ secrets.AWS_SESSION_TOKEN }}
+          aws-region: us-east-1
+
+      - name: Save SSH Private Key
+        run: |
+          echo "${{ secrets.FOO_SSH_PRIVATE_KEY }}" > infra/foo_ec2_key
+          chmod 600 infra/foo_ec2_key
+
+      - name: Save SSH Public Key
+        run: |
+          echo "${{ secrets.FOO_SSH_PUBLIC_KEY }}" > infra/foo_ec2_key.pub
+      
+      - name: Setup Terraform
+        uses: hashicorp/setup-terraform@v2
+
+      - name: Install Latest Ansible using pip
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y python3-pip
+          pip3 install --upgrade ansible
+          ansible --version  # Verify the installation
+      
+      - name: Destroy s3 bucket
+        run: terraform destroy --auto-approve bucket/
+      
+      - name: Destroy main infrastructure
+        run: terraform destroy --auto-approve infra/
+      
