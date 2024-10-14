@@ -281,7 +281,22 @@ load-balancer.tf - Logs from the load balancer are sent to the s3 bucket in orde
 
 <!-- #### Description of the GitHub Actions workflow -->
 
-<!-- #### Backup process: deploying from a shell script -->
+### GitHub Actions workflow
+
+<img src="./misc/CD-Pipeline-Success.png" >
+Workflow of the deployment of infrastructure in the CD pipeline.
+
+</br>
+
+<img src="./misc/CD-Pipeline-Fail.png" >
+Workflow of infrastructure already existing in the CD pipeline.
+
+</br>
+
+<img src="./misc/DESTRUCTION-success.png" >
+Workflow of the destruction of all infrastructure in the DESTRUCTION pipeline.
+
+</br>
 
 
 ### Validating that the app is working
