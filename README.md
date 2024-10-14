@@ -340,6 +340,9 @@ Workflow of the destruction of all infrastructure in the DESTRUCTION pipeline.
 - `misc/`: A directory containing files given by Alpine Inc. for the deployment proces, as well as the architecture diagram.
     - `COSC2759 A2 Architecture Diagram (single instance).png`
     - `COSC2759 A2 Architecture Diagram (multi instance).png`
+    - `CD-Pipeline-Fail.png`
+    - `CD-Pipeline-Success.png`
+    - `DESTRUCTION-success.png`
     - `COSC2759 A2 Application.gif`
     - `main-branch-protection.webp`
     - `main-branch-protection-2.webp`
