@@ -1,0 +1,88 @@
+name: Foo Application DESTRUCTION Pipeline
+
+on:
+  workflow_dispatch:
+
+jobs:
+  destroy:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout repo
+        uses: actions/checkout@v4
+      
+      - name: Configure AWS Credentials
+        uses: aws-actions/configure-aws-credentials@v4
+        with:
+          aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
+          aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+          aws-session-token: ${{ secrets.AWS_SESSION_TOKEN }}
+          aws-region: us-east-1
+
+      - name: Save SSH Private Key
+        run: |
+          echo "${{ secrets.FOO_SSH_PRIVATE_KEY }}" > infra/foo_ec2_key
+          chmod 600 infra/foo_ec2_key
+
+      - name: Save SSH Public Key
+        run: |
+          echo "${{ secrets.FOO_SSH_PUBLIC_KEY }}" > infra/foo_ec2_key.pub
+      
+      - name: Setup Terraform
+        uses: hashicorp/setup-terraform@v3
+      
+      - name: Initialise Terraform
+        run: |
+          cd infra/
+          terraform init -reconfigure
+      
+      - name: Destroy main infrastructure
+        run: |
+          cd infra/
+          terraform destroy --auto-approve
+
+      - name: Empty the S3 bucket
+        run: |
+          BUCKET_NAME="foo-bucket-s3895662-s4077402"
+      
+          # Remove all object versions
+          versions=$(aws s3api list-object-versions --bucket $BUCKET_NAME --query 'Versions[].[Key,VersionId]' --output text)
+          if [ -n "$versions" ]; then
+            echo "$versions" | while read -r key version_id; do
+              if [ -n "$key" ] && [ -n "$version_id" ]; then
+                aws s3api delete-object --bucket $BUCKET_NAME --key "$key" --version-id "$version_id"
+              else
+                echo "Skipping object with empty key or version_id"
+              fi
+            done
+          fi
+      
+          # Remove all delete markers
+          delete_markers=$(aws s3api list-object-versions --bucket $BUCKET_NAME --query 'DeleteMarkers[].[Key,VersionId]' --output text)
+          if [ -n "$delete_markers" ]; then
+            echo "$delete_markers" | while read -r key version_id; do
+              if [ -n "$key" ] && [ -n "$version_id" ]; then
+                aws s3api delete-object --bucket $BUCKET_NAME --key "$key" --version-id "$version_id"
+              else
+                echo "Skipping delete marker with empty key or version_id"
+              fi
+            done
+          fi
+        
+          aws s3 rm s3://foo-bucket-s3895662-s4077402 --recursive
+
+      - name: Delete the S3 bucket
+        run: aws s3api delete-bucket --bucket foo-bucket-s3895662-s4077402 --region us-east-1
+      
+      - name: Delete DynamoDB Table
+        run: |
+          TABLE_NAME="foostatelock"
+
+          # Delete the DynamoDB table
+          aws dynamodb delete-table --table-name $TABLE_NAME
+
+          # Wait until the table is deleted
+          aws dynamodb wait table-not-exists --table-name $TABLE_NAME
+
+          echo "DynamoDB table $TABLE_NAME deleted successfully."
+      
